@@ -5,6 +5,10 @@ import "fmt"
 type Logger struct {
 }
 
+func New() *Logger {
+	return &Logger{}
+}
+
 func (l *Logger) Infof(format string, args ...interface{}) {
 	fmt.Printf(format, args...)
 }

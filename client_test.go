@@ -57,9 +57,8 @@ func TestLoggerImpl_With(t *testing.T) {
 		Namespace: "default",
 	})
 
-	logger.Info("mkay")
+	logger.Info("okay")
 
-	logger.With(Fields{"hello": "world"}).Fast().Namespace("custom").Info("modified")
 	logger.Namespace("custom").With(Fields{"hello": "world"}).Info("modified")
 
 	logger.Info("should be clear")

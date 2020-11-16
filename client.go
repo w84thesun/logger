@@ -77,9 +77,6 @@ type Logger interface {
 	// Override namespace
 	Namespace(namespace string) Logger
 
-	// Use fast logging. Messages can and will be lost
-	Fast() Logger
-
 	// Logs call stack for error
 	Trace(err error)
 
@@ -95,9 +92,6 @@ type loggerImpl struct {
 
 	// Extra fields
 	fields Fields
-
-	// Streaming used if false, Nats if true
-	fast bool
 }
 
 func (l loggerImpl) prepare() *zap.SugaredLogger {
@@ -170,12 +164,6 @@ func (l loggerImpl) Namespace(namespace string) Logger {
 	return l
 }
 
-func (l loggerImpl) Fast() Logger {
-	l.fields = l.fields.Merge(Fields{"fast": true})
-
-	return l
-}
-
 func (l loggerImpl) GetField(fieldName string) (value interface{}, ok bool) {
 	value, ok = l.fields[fieldName]
 	return value, ok
@@ -212,7 +200,6 @@ func New(config LoggingConfig) (logger Logger, err error) {
 	logger = &loggerImpl{
 		base:   zapLogger.Sugar(),
 		fields: Fields{"namespace": config.Namespace},
-		fast:   false,
 	}
 
 	return logger, nil
